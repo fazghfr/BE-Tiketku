@@ -5,6 +5,7 @@ use App\Http\Controllers\tripController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PaymethodController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -67,4 +68,12 @@ Route::group(['prefix' => 'transactions'], function () {
     Route::get('/', [TransactionController::class, 'index']);
     Route::get('/{id}', [TransactionController::class, 'show']);
     Route::post('/', [TransactionController::class, 'store']);
+});
+
+// defining the routes for the tickets
+// NOTES in advance : tickets destroy is admin only
+Route::group(['prefix' => 'tickets'], function () {
+    Route::get('/{id}', [TicketController::class, 'show']);
+    Route::post('/', [TicketController::class, 'store']);
+    Route::delete('/{id}', [TicketController::class, 'destroy']);
 });
