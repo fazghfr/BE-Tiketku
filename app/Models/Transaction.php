@@ -14,7 +14,7 @@ class Transaction extends Model
         'total_price',
         'users_id',
         'trips_id',
-        'payment_methods_id',
+        'payment_method',
     ];
 
     public function user()
@@ -25,11 +25,6 @@ class Transaction extends Model
     public function trip()
     {
         return $this->belongsTo(Trip::class);
-    }
-
-    public function paymentMethod()
-    {
-        return $this->belongsTo(PaymentMethod::class);
     }
 
     public function tickets()

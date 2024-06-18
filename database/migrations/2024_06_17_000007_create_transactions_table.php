@@ -19,7 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('total_price');
             $table->foreignId('users_id')->constrained()->onDelete('cascade');
             $table->foreignId('trips_id')->constrained()->onDelete('cascade');
-            $table->foreignId('payment_methods_id')->constrained()->onDelete('cascade');
+            $table->string('payment_method', 32);
             $table->timestamps();
         });
     }

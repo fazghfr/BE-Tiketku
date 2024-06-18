@@ -80,7 +80,7 @@ Route::group(['prefix' => 'tickets'], function () {
     Route::get('/{id}', [TicketController::class, 'show']);
     Route::post('/', [TicketController::class, 'store']);
     Route::delete('/{id}', [TicketController::class, 'destroy']);
-    Route::get('/util/getTickets', [TicketController::class, 'getTickets']);
+    Route::get('/util/getTickets/{email}', [TicketController::class, 'getTickets']);
 });
 
 // defining the routes for the cars
@@ -101,7 +101,7 @@ route::group(['prefix' => 'tickets'], function () {
     Route::get('/{id}', [TicketController::class, 'show']);
     Route::post('/', [TicketController::class, 'store']);
     Route::delete('/{id}', [TicketController::class, 'destroy']);
-    Route::get('/util/getTickets', [TicketController::class, 'getTickets']);
+    Route::post('/util/getTickets', [TicketController::class, 'getTickets']);
 });
 
 // seats show_by_trip, choose, choose_random, store, batch_store

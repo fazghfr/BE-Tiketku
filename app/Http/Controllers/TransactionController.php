@@ -43,13 +43,32 @@ class TransactionController extends Controller
         $request->validate([
             'is_paid' => 'required',
             'total_price' => 'required',
-            'users_id' => 'required',
             'trips_id' => 'required',
-            'payment_methods_id' => 'sometimes'
+            'payment_method' => 'sometimes',
+            'email' => 'required',
+            'phone' => 'required',
+            'name' => 'required'
         ]);
 
-        // check if users_id and trips_id is exist
-        $user = User::find($request->users_id);
+        // check if users_id with given email and trips_id is exist
+        $user = User::where('email', $request->email)->first();
+        if(!$user) {
+            $user = User::create([
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'name' => $request->name
+            ]);
+        } else {
+            // update user phone and name
+            $user->phone = $request->phone;
+            $user->name = $request->name;
+        }
+
+        // debug code
+        // return response()->json([
+        //     'status' => 'error',
+        //     'data' => $user
+        // ], 404);
         $trip = Trip::find($request->trips_id);
 
         if(!$user || !$trip) {
@@ -63,9 +82,9 @@ class TransactionController extends Controller
         $transaction = Transaction::create([
             'is_paid' => $request->is_paid,
             'total_price' => $request->total_price,
-            'users_id' => $request->users_id,
+            'users_id' => $user->id,
             'trips_id' => $request->trips_id,
-            'payment_methods_id' => $request->payment_methods_id
+            'payment_method' => $request->payment_method
         ]);
 
         if (!$transaction) {
@@ -74,6 +93,27 @@ class TransactionController extends Controller
                 'message' => 'Transaction failed to store'
             ], 500);
         }
+
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $transaction
+        ]);
+    }
+
+    public function confirm_pay($id)
+    {
+        $transaction = Transaction::find($id);
+
+        if (!$transaction) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Transaction not found'
+            ], 404);
+        }
+
+        $transaction->is_paid = true;
+        $transaction->save();
 
         return response()->json([
             'status' => 'success',

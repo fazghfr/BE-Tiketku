@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\Seat;
+use App\Models\Car;
+use App\Models\Trip;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Redis;
 
 class TicketController extends Controller
 {
@@ -35,7 +38,7 @@ class TicketController extends Controller
         ]);
     }
 
-    public function index_by_email(Request $request)
+    public function getTickets(Request $request)
     {
         $user = $this->userController->get_user_by_email($request->email);
 
@@ -49,12 +52,8 @@ class TicketController extends Controller
         // get transactions by user id
         $transaction = Transaction::where('users_id', $user->id)->get();
 
-        // karena bisa multiple transactions, for each transaction id get all tickets
-        $tickets = [];
-        foreach ($transaction as $trans) {
-            $ticket = Ticket::where('transactions_id', $trans->id)->get();
-            array_push($tickets, $ticket);
-        }
+        // find tickets by transaction id
+        $tickets = Ticket::whereIn('transactions_id', $transaction->pluck('id'))->get();
 
         return response()->json([
             'status' => 'success',
@@ -67,7 +66,6 @@ class TicketController extends Controller
         $validatedData = $request->validate([
             'NIK' => 'required',
             'cust_name' => 'required',
-            'price_each' => 'required',
             'transactions_id' => 'required',
             'cars_id' => 'required',
             'trips_id' => 'required',
@@ -80,10 +78,6 @@ class TicketController extends Controller
         if ($request->is_chose_seat == false) {
             // calling function to get random seat from seatcontroller
             $seat = $this->seatController->choose_random($request, $request->trips_id);
-            return response()->json([
-                'status' => 'success',
-                'data' => $seat
-            ]);
             $seatId = $seat->id;
         } else {
             // logic to assign seat based on user input
@@ -92,7 +86,22 @@ class TicketController extends Controller
             $seatId = $seat->id;
         }
 
-        $ticketData = array_merge($validatedData, ['seats_id' => $seatId]);
+        // if class of car is Ekonomi, then the price is 100000, if Bisnis then 200000 and if Eksekutif then 300000
+        $car = Car::find($request->cars_id);
+        $price = 0;
+        if ($car->class == 'Ekonomi') {
+            $price = 100000;
+        } else if ($car->class == 'Bisnis') {
+            $price = 200000;
+        } else if ($car->class == 'Eksekutif') {
+            $price = 300000;
+        }
+
+        //get trip price
+        $trip = Trip::find($request->trips_id);
+        $price += $trip->price;
+
+        $ticketData = array_merge($validatedData, ['seats_id' => $seatId, 'price_each' => $price]);
         $ticket = Ticket::create($ticketData);
 
         return response()->json([
