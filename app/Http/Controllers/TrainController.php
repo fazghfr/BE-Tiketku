@@ -7,6 +7,13 @@ use App\Models\Train;
 
 class TrainController extends Controller
 {
+    public PicController $PicController;
+
+    public function __construct(PicController $PicController)
+    {
+        $this->PicController = $PicController;
+    }
+
     public function index()
     {
         // getting all trains data from database using the model
@@ -32,10 +39,18 @@ class TrainController extends Controller
             ], 404);
         }
 
+        // finding pictures of that train
+        $pictures = $this->PicController->show($train->id);
+
+        $response_object = [
+            'train' => $train,
+            'pictures' => $pictures
+        ];
+
         // returning the json response
         return response()->json([
             'status' => 'success',
-            'data' => $train
+            'data' => $response_object
         ]);
     }
 

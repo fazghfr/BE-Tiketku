@@ -17,6 +17,10 @@ class CreateTrainsTable extends Migration
             $table->id();
             $table->string('name', 255);
             $table->integer('car_count');
+            $table->boolean('is_cafe')->default(true);
+            $table->boolean('is_toilet')->default(true);
+            $table->boolean('is_tv')->default(true);
+            $table->boolean('is_wifi')->default(true);
             $table->integer('seat_per_car_count');
             $table->timestamps();
         });

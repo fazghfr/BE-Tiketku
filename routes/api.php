@@ -6,6 +6,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PaymethodController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\SeatController;
+use App\Http\Controllers\carController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +42,8 @@ Route::group(['prefix' => 'trips'], function () {
     Route::get('/{id}', [tripController::class, 'show']);
     Route::post('/', [tripController::class, 'store']);
     Route::delete('/{id}', [tripController::class, 'destroy']);
+    Route::post('/util/find', [tripController::class, 'find']);
+    Route::get('/util/getStations', [tripController::class, 'getStations']);
 });
 
 // defining the routes for users
@@ -76,4 +80,35 @@ Route::group(['prefix' => 'tickets'], function () {
     Route::get('/{id}', [TicketController::class, 'show']);
     Route::post('/', [TicketController::class, 'store']);
     Route::delete('/{id}', [TicketController::class, 'destroy']);
+    Route::get('/util/getTickets', [TicketController::class, 'getTickets']);
+});
+
+// defining the routes for the cars
+Route::group(['prefix' => 'cars'], function () {
+    Route::post('/', [carController::class, 'store']);
+});
+
+
+// defining the routes for the transactions
+route::group(['prefix' => 'transactions'], function () {
+    Route::get('/', [TransactionController::class, 'index']);
+    Route::get('/{id}', [TransactionController::class, 'show']);
+    Route::post('/', [TransactionController::class, 'store']);
+});
+
+// ticket
+route::group(['prefix' => 'tickets'], function () {
+    Route::get('/{id}', [TicketController::class, 'show']);
+    Route::post('/', [TicketController::class, 'store']);
+    Route::delete('/{id}', [TicketController::class, 'destroy']);
+    Route::get('/util/getTickets', [TicketController::class, 'getTickets']);
+});
+
+// seats show_by_trip, choose, choose_random, store, batch_store
+Route::group(['prefix' => 'seats'], function () {
+    Route::get('/{trip_id}', [SeatController::class, 'show_by_trip']);
+    Route::post('/{trip_id}/{seat_id}', [SeatController::class, 'choose']);
+    Route::post('/{trip_id}', [SeatController::class, 'choose_random']);
+    Route::post('/', [SeatController::class, 'store']);
+    Route::post('/util/load/batch', [SeatController::class, 'batch_store']);
 });

@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Picture extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'phone',
-        'email'
+        'url',
+        'trains_id',
     ];
 
-    public function transactions()
+    public function train()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsTo(Train::class);
     }
 }

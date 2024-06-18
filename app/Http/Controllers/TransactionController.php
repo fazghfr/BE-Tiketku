@@ -45,7 +45,7 @@ class TransactionController extends Controller
             'total_price' => 'required',
             'users_id' => 'required',
             'trips_id' => 'required',
-            'payment_methods_id' => 'required'
+            'payment_methods_id' => 'sometimes'
         ]);
 
         // check if users_id and trips_id is exist

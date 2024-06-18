@@ -19,6 +19,13 @@ class UsersController extends Controller
         ]);
     }
 
+    public function get_user_by_email($email)
+    {
+        $user = User::where('email', $email)->first();
+
+        return $user;
+    }
+
     public function show($id)
     {
         $user = User::find($id);
@@ -41,7 +48,7 @@ class UsersController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required',
-            'gender' => 'required'
+            'phone' => 'required'
         ]);
         // check if email already exists
         $user = User::where('email', $request->email)->first();
@@ -75,8 +82,11 @@ class UsersController extends Controller
 
         if (!$user) {
             return response()->json([
-                'message' => 'User not found'], 404);
+                'message' => 'User not found'
+            ], 404);
         }
+
+
 
         // validate
         $validatedData = $request->validate([

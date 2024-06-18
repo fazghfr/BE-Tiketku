@@ -14,6 +14,7 @@ class Trip extends Model
         'dst_station',
         'dpt_sched',
         'arv_sched',
+        'price',
         'trains_id',
     ];
 

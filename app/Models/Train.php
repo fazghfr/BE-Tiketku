@@ -13,6 +13,9 @@ class Train extends Model
         'name',
         'car_count',
         'seat_per_car_count',
+        'is_cafe',
+        'is_toilet',
+        'is_tv',
     ];
 
     public function cars()
@@ -23,5 +26,10 @@ class Train extends Model
     public function trips()
     {
         return $this->hasMany(Trip::class);
+    }
+
+    public function pictures()
+    {
+        return $this->hasMany(Picture::class);
     }
 }

@@ -19,6 +19,7 @@ class CreateTripsTable extends Migration
             $table->string('dst_station', 255);
             $table->dateTime('dpt_sched');
             $table->dateTime('arv_sched');
+            $table->integer('price');
             $table->foreignId('trains_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
