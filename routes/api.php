@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\trainController;
-use App\Http\Controllers\tripController;
+use App\Http\Controllers\TrainController;
+use App\Http\Controllers\TripController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PaymethodController;
 use App\Http\Controllers\TransactionController;
